@@ -150,7 +150,6 @@
 		    	if(snake.isover) {
 		    		return;
 		    	}
-		    	GameStart = true;
 		        var ev = e||window.event;
 		    	console.log(ev.keyCode)
 
@@ -158,33 +157,29 @@
 		            case 37:{
 		                if (snake.direction !== 39){
 		                    snake.direction = 37;
-		                    //stop ();
-		                    //start();
 		                }
+		                GameStart = true;
 		                break;
 		            }
 		            case 38:{
 		                if (snake.direction !== 40){
 		                    snake.direction = 38;
-							//stop ();
-		                    //start();
 		                }
+		                GameStart = true;
 		                break;
 		            }
 		            case 39:{
 		                if (snake.direction !== 37){
 		                    snake.direction = 39;
-		                    //stop ();
-		                   // start();
 		                }
+		                GameStart = true;
 		                break;
 		            }
 		            case 40:{
 		                if (snake.direction !== 38){
 		                    snake.direction = 40;
-		                    //stop ();
-		                    //start();
 		                }
+		                GameStart = true;
 		                break;
 		            }
 		            default:
@@ -238,13 +233,11 @@
 
 
 				cubeGroup = new THREE.Object3D();
-				//cube
+
 				snake = new Snake();
 				food = new getRandomFood();
 
 
-
-				// Lights
 				var ambientLight = new THREE.AmbientLight( Math.random() * 0x10 );
 				scene.add( ambientLight );
 
@@ -266,7 +259,6 @@
 				stats = new Stats();
 				container.appendChild( stats.dom );
 
-				//
 
 				window.addEventListener( 'resize', onWindowResize, false );
 			}
@@ -324,6 +316,63 @@
 
 			init();
 			start();
+
+
+
+	if (window.WebSocket) {
+		var ws = new WebSocket('ws://localhost:8001');
+
+		ws.onopen = function(e) {
+			console.log("连接服务器成功");
+			ws.send("game");
+		}
+		ws.onclose = function(e) {
+			console.log("服务器关闭");
+		}
+		ws.onerror = function() {
+			console.log("连接出错");
+		}
+
+		ws.onmessage = function(e) {
+			switch(e.data){
+		            case "left":{
+		                if (snake.direction !== 39){
+		                	GameStart = true;
+		                    snake.direction = 37;
+		                }
+		                break;
+		            }
+		            case "top":{
+		                if (snake.direction !== 40){
+		                	GameStart = true;
+		                    snake.direction = 38;
+		                }
+		                break;
+		            }
+		            case "right":{
+		                if (snake.direction !== 37){
+		                	GameStart = true;
+		                    snake.direction = 39;
+
+		                }
+		                break;
+		            }
+		            case "bottom":{
+		                if (snake.direction !== 38){
+		                	GameStart = true;
+		                    snake.direction = 40;
+		                }
+		                break;
+		            }
+		            case "restart": {
+		            	location.reload();
+		            	break;
+		            }
+		            default:
+		            	break;
+		        }
+		}
+	}
 		</script>
 </body>
 </html>

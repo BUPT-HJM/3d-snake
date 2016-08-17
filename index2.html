@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>遥控</title>
+	<meta name="viewport" content="width=640,target-densitydpi=device-dpi,user-scalable=no">
+	<style>
+		html,body {
+			height: 100%;
+			width: 100%;
+			font-family: "微软雅黑"
+		}
+		.item {
+			position: absolute;
+			top: 20%;
+			left: 40%;
+		}
+		.item-tri-1 {
+			position: relative;
+			width: 0;
+		    height: 0;
+		    border-left: 80px solid transparent;
+		    border-right: 80px solid transparent;
+		    border-bottom: 120px solid #888;
+		}
+		.item-rec {
+			position: relative;
+			left: 50%;
+			margin-left: -25px;
+			width: 50px;
+		    height: 180px;
+		    background-color: #888;
+		}
+		.item-tri-2 {
+			position: relative;
+			width: 0;
+		    height: 0;
+		    border-left: 80px solid transparent;
+		    border-right: 80px solid transparent;
+		    border-top: 120px solid #888;
+		}
+
+		.item-1 {
+		}
+		.item-2 {
+			transform:rotate(-90deg);
+			-ms-transform:rotate(-90deg); 	/* IE 9 */
+			-moz-transform:rotate(-90deg); 	/* Firefox */
+			-webkit-transform:rotate(-90deg); /* Safari 和 Chrome */
+			-o-transform:rotate(-90deg); 	/* Opera */
+		}
+		
+		#restart {
+			position: absolute;
+			width: 200px;
+			height: 60px;
+			background-color: #666;
+			line-height: 60px;
+			font-size: 25px;
+			color: #fff;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div class="item item-1">
+		<div class="item-tri-1"></div>
+		<div class="item-rec"></div>
+		<div class="item-tri-2"></div>
+	</div>
+
+	<div class="item item-2">
+		<div class="item-tri-1"></div>
+		<div class="item-rec"></div>
+		<div class="item-tri-2"></div>
+	</div>
+	<div id="restart">restart!</div>
+	<script>
+	if (window.WebSocket) {
+		var ws = new WebSocket('ws://localhost:8001');
+
+		ws.onopen = function(e) {
+			console.log("连接服务器成功");
+			ws.send("control");
+		}
+		ws.onclose = function(e) {
+			console.log("服务器关闭");
+		}
+		ws.onerror = function() {
+			console.log("连接出错");
+		}
+
+		ws.onmessage = function(e) {
+		}
+	}
+	document.querySelector(".item-1 .item-tri-1").onclick = function() {
+		ws.send("top");
+	}
+	document.querySelector(".item-1 .item-tri-2").onclick = function() {
+		ws.send("bottom");
+	}
+	document.querySelector(".item-2 .item-tri-1").onclick = function() {
+		ws.send("left");
+	}
+	document.querySelector(".item-2 .item-tri-2").onclick = function() {
+		ws.send("right");
+	}
+	document.querySelector("#restart").onclick = function() {
+		ws.send("restart");
+	}
+	</script>
+</body>
+</html>
